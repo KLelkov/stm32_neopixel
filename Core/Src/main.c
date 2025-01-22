@@ -68,8 +68,6 @@ PixelRGB_t pixel[NUM_PIXELS] = {0};  // Used to store color values of each led
 uint32_t dmaBuffer[DMA_BUFF_SIZE] = {0};  // Apparently DMA buffer needs to be incremental,
 										  // so you cant just create a new one on each
 										  // function call
-
-
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -87,8 +85,24 @@ void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim)
   HAL_TIM_PWM_Stop_DMA(htim, TIM_CHANNEL_1);
 }
 
+// The color is set in range [0, 255], where 0 is the lowest brightness and 255 is the highest
+// For example to turn 3th LED red with max brightness you would call set_led(2, 255, 0, 0)
+// And to set 5th LED yellow with reduced brightness you might use set_led(4, 100, 100, 0)
+// Notice that LED's indexes start from 0, so the 5th led has id = 4
 void set_led(int id, int red, int green, int blue)
 {
+	if (id < 0 || id >= NUM_PIXELS)
+	{
+		return;  // LED id outside of given range
+	}
+	if (red < 0 || green < 0 || blue < 0)
+	{
+		return;  // Color values must be positive
+	}
+	if (red > 255 || green > 255 || blue > 255)
+	{
+		return;  // Color values must not exceed 255
+	}
 	uint32_t *pBuff;
 	pixel[id].color.g = green;
 	pixel[id].color.r = red;
@@ -182,8 +196,8 @@ int main(void)
 
   /* USER CODE BEGIN 2 */
   clear_leds();
-  set_led(8, 100, 0, 0); // Yup, it is that easy
-  set_led(9, 100, 0, 0);
+  set_led(8, 100, 100, 0); // Yup, it is that easy
+  set_led(9, 100, 100, 0);
 
   /* USER CODE END 2 */
 
