@@ -158,6 +158,10 @@ void clear_leds()
 
 The first one `HAL_TIM_PWM_PulseFinishedCallback` is a service function, you don't need to worry about it. The second one `set_led` we will be actually using to control LEDs. And the third one `clear_leds` will be used to clear (turn off) all the LEDs at once.
 
+In `HAL_TIM_PWM_PulseFinishedCallback` replace the `TIM_CHANNEL_1` with whatever channel you are using (remember, Im using `TIM1 CH1`)
+
+In `set_led` and `clear_leds` replace `&htim1` and `TIM_CHANNEL_1` with whatever timer and channels you are using.
+
 **That's it!** Now you can easily control your LED strip with these two functions just like this inside your `main()`function:
 
 ```
